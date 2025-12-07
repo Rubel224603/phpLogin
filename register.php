@@ -5,14 +5,12 @@ $passMessage  =   '';
 
 
 if (isset($_POST['submit'])) {
+
     $userName  = $_POST['name'];
     $userEmail = $_POST['email'];
     $userPass  = $_POST['password'];
 
-    $db = mysqli_connect('localhost', 'root', '', 'loginsystem');
-    if (!$db) {
-        echo "Database connection not Eastbilshed";
-    }
+
     if (empty($userName)) {
         $nameMessage = "Fill up this fild";
     }
@@ -22,6 +20,25 @@ if (isset($_POST['submit'])) {
 
     if (empty($userPass)) {
         $passMessage = "Fill up this fild";
+    }
+
+    $db = mysqli_connect('localhost', 'root', '', 'loginsystem');
+
+    if (!$db) {
+        echo "Database connection not Eastbilshed";
+    }
+    if (!empty($userName) && !empty($userEmail) && !empty($userPass)) {
+
+        $sql = "insert into users(name, email, password) 
+                values ('$userName', '$userEmail', '$userPass')";
+        //echo $sql;
+        $runQuery = mysqli_query($db, $sql);
+
+        if ($runQuery) {
+            echo "Data inserted successfully!";
+        } else {
+            echo "Something is wrong: " . mysqli_error($db);
+        }
     }
 }
 
@@ -58,7 +75,11 @@ if (isset($_POST['submit'])) {
                             <div class="mb-3">
                                 <label class="form-label">Name</label>
                                 <input type="text" class="form-control" placeholder="Enter name" name="name">
-                                <?php echo '<span color="text-dark">' . $nameMessage . '</span>'; ?>
+                                <?php
+                                if (isset($_POST['submit'])) {
+                                    echo '<span class="text-danger">' . $nameMessage . '</span>';
+                                }
+                                ?>
                             </div>
 
                             <div class="mb-3">
@@ -66,7 +87,7 @@ if (isset($_POST['submit'])) {
                                 <input type="email" class="form-control" placeholder="Enter email" name="email">
                                 <?php
                                 if (isset($_POST['submit'])) {
-                                    echo '<span class="text-dark">' . $nameMessage . '</span>';
+                                    echo '<span class="text-danger">' . $emailMessage . '</span>';
                                 }
                                 ?>
 
@@ -75,7 +96,11 @@ if (isset($_POST['submit'])) {
                             <div class="mb-3">
                                 <label class="form-label">Password</label>
                                 <input type="password" class="form-control" placeholder="Enter password" name="password">
-                                <?php echo '<span color="text-dark">' . $passMessage . '</span>'; ?>
+                                <?php
+                                if (isset($_POST['submit'])) {
+                                    echo '<span class="text-danger">' . $passMessage . '</span>';
+                                }
+                                ?>
 
                             </div>
 
